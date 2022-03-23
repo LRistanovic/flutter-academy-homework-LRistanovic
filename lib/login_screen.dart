@@ -12,7 +12,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xff3d01c6),
+        backgroundColor: const Color(0xff52368C),
         body: SingleChildScrollView(
             child: Container(
           alignment: Alignment.center,
