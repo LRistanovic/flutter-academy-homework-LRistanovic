@@ -20,7 +20,7 @@ class LoginButton extends StatelessWidget {
                           ? () {
                               final route =
                                   MaterialPageRoute(builder: (context) => WelcomeScreen(email: provider.email));
-                              Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+                              Navigator.of(context).pushReplacement(route);
                             }
                           : null,
                       child: const Text('Login'),
@@ -29,7 +29,7 @@ class LoginButton extends StatelessWidget {
                               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
                           backgroundColor: MaterialStateProperty.all(provider.canLogin ? Colors.white : Colors.grey),
                           overlayColor: MaterialStateProperty.all(const Color(0xffdbdbdb)),
-                          foregroundColor: MaterialStateProperty.all(const Color(0xff3d01c6))),
+                          foregroundColor: MaterialStateProperty.all(const Color(0xff52368C))),
                     ))));
   }
 }
