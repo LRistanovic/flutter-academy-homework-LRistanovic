@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'shows/shows_screen.dart';
+import '../shows/shows_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   final String email;

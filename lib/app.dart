@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'login_screen.dart';
+import 'login/login_screen.dart';
+import 'networking/auth_info_holder.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -8,11 +9,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TV Shows',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const LoginScreen(),
-    );
+        title: 'TV Shows',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: LoginScreen(authInfoHolder: AuthInfoHolder()));
   }
 }
