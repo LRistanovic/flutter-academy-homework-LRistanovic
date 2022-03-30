@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class StateProvider with ChangeNotifier {
+class CredentialsProvider with ChangeNotifier {
   bool _isVisible = false;
   bool get isVisible => _isVisible;
 
@@ -19,6 +19,7 @@ class StateProvider with ChangeNotifier {
   }
 
   String _password = '';
+  String get password => _password;
   set password(val) {
     if (_password != val) {
       _password = val;

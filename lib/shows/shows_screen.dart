@@ -12,48 +12,30 @@ class ShowsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChangeNotifierProvider<ShowsProvider>(
-        create: (_) => ShowsProvider(),
+        create: (context) => ShowsProvider(context),
         child: Column(
           children: [
             Container(
               padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Shows',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                  Consumer<ShowsProvider>(
-                    builder: (context, showsProvider, _) {
-                      return OutlinedButton(
-                          onPressed: () => {
-                                showsProvider.areShowsAvailable
-                                    ? showsProvider.areShowsAvailable = false
-                                    : showsProvider.areShowsAvailable = true
-                              },
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
-                          child: Text(showsProvider.areShowsAvailable ? 'Hide' : 'Show'));
-                    },
-                  )
-                ],
+              alignment: Alignment.centerLeft,
+              child: const Text(
+                'Shows',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
             ),
             Expanded(
               child: Consumer<ShowsProvider>(
                 builder: (context, showsProvider, _) {
-                  return !showsProvider.areShowsAvailable
-                      ? const NoShowsWidget()
-                      : SingleChildScrollView(
-                          child: Consumer<ShowsProvider>(
-                            builder: (context, showsProvider, _) {
-                              return Column(
-                                  children: showsProvider.shows.map((show) => ShowWidget(show: show)).toList());
-                            },
-                          ),
-                        );
+                  return showsProvider.state.when(
+                    initial: () => const Text('Your shows still aren\'t loading.'),
+                    loading: () => const CircularProgressIndicator(),
+                    success: (shows) => SingleChildScrollView(
+                      child: Column(
+                        children: shows.map((show) => ShowWidget(show: show)).toList(),
+                      ),
+                    ),
+                    failure: (error) => Text(error.toString()), //const NoShowsWidget(),
+                  );
                 },
               ),
             ),

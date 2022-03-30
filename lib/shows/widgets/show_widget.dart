@@ -28,11 +28,13 @@ class ShowWidget extends StatelessWidget {
           children: [
             Expanded(
               flex: 3,
-              child: Image.asset(
-                show.imageUrl,
-                fit: BoxFit.fitWidth,
-                width: double.infinity,
-              ),
+              child: show.imageUrl != null
+                  ? Image.asset(
+                      show.imageUrl!,
+                      fit: BoxFit.fitWidth,
+                      width: double.infinity,
+                    )
+                  : Container(),
             ),
             Expanded(
               flex: 2,
@@ -47,14 +49,19 @@ class ShowWidget extends StatelessWidget {
                             //overflow: TextOverflow.fade,
                             style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 17))),
                     Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(show.description,
-                            maxLines: 2,
-                            style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                overflow: TextOverflow.ellipsis)))
+                      alignment: Alignment.centerLeft,
+                      child: show.description != null
+                          ? Text(
+                              show.description!,
+                              maxLines: 2,
+                              style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  overflow: TextOverflow.ellipsis),
+                            )
+                          : Container(),
+                    ),
                   ],
                 ),
               ),

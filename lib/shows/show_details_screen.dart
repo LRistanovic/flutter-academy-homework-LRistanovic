@@ -30,12 +30,12 @@ class ShowDetailsScreen extends StatelessWidget {
                       children: [
                         Container(
                           margin: const EdgeInsets.only(top: 15),
-                          child: Image.asset(show.imageUrl),
+                          child: show.imageUrl != null ? Image.asset(show.imageUrl!) : Container(),
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 25, bottom: 15),
                           child: Text(
-                            show.description,
+                            show.description ?? '',
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
