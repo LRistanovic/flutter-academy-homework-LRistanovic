@@ -8,11 +8,11 @@ part of 'show.dart';
 
 Show _$ShowFromJson(Map<String, dynamic> json) => Show(
       json['id'] as String,
-      json['title'] as String,
-      json['description'] as String,
-      json['no_of_reviews'] as int,
-      (json['average_rating'] as num).toDouble(),
-      json['image_url'] as String,
+      json['title'] as String?,
+      json['description'] as String?,
+      json['no_of_reviews'] as int?,
+      (json['average_rating'] as num?)?.toDouble(),
+      json['image_url'] as String?,
     );
 
 Map<String, dynamic> _$ShowToJson(Show instance) => <String, dynamic>{

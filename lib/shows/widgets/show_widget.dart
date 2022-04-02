@@ -29,7 +29,7 @@ class ShowWidget extends StatelessWidget {
             Expanded(
               flex: 3,
               child: show.imageUrl != null
-                  ? Image.asset(
+                  ? Image.network(
                       show.imageUrl!,
                       fit: BoxFit.fitWidth,
                       width: double.infinity,
@@ -43,11 +43,13 @@ class ShowWidget extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        alignment: Alignment.centerLeft,
-                        child: Text(show.name,
-                            //overflow: TextOverflow.fade,
-                            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 17))),
+                      margin: const EdgeInsets.only(bottom: 20),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        show.name ?? '<no data>',
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 17),
+                      ),
+                    ),
                     Container(
                       alignment: Alignment.centerLeft,
                       child: show.description != null

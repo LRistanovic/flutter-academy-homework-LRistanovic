@@ -2,11 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+import 'util/show.dart';
 import 'util/shows_provider.dart';
 import 'widgets/show_widget.dart';
 
 class ShowsScreen extends StatelessWidget {
   const ShowsScreen({Key? key}) : super(key: key);
+
+  List<Widget> widgetsFromShows(List<Show> shows) {
+    List<Widget> widgets = [];
+    for (Show show in shows) {
+      widgets.add(ShowWidget(show: show));
+    }
+    return widgets;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +32,25 @@ class ShowsScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
             ),
-            Expanded(
-              child: Consumer<ShowsProvider>(
-                builder: (context, showsProvider, _) {
-                  return showsProvider.state.when(
-                    initial: () => const Text('Your shows still aren\'t loading.'),
-                    loading: () => const CircularProgressIndicator(),
-                    success: (shows) => SingleChildScrollView(
-                      child: Column(
-                        children: shows.map((show) => ShowWidget(show: show)).toList(),
-                      ),
-                    ),
-                    failure: (error) => Text(error.toString()), //const NoShowsWidget(),
-                  );
-                },
-              ),
+            Consumer<ShowsProvider>(
+              builder: (context, showsProvider, _) {
+                return showsProvider.state.when(
+                    initial: () => Container(),
+                    loading: () => const Padding(
+                          padding: EdgeInsets.all(20),
+                          child: CircularProgressIndicator(),
+                        ),
+                    success: (shows) => shows.length != 0
+                        ? Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: widgetsFromShows(shows),
+                              ),
+                            ),
+                          )
+                        : const NoShowsWidget(),
+                    failure: (error) => const NoShowsWidget());
+              },
             ),
           ],
         ),

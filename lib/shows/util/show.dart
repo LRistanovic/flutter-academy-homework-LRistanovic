@@ -6,10 +6,10 @@ part 'show.g.dart';
 class Show {
   final String id;
   @JsonKey(name: 'title')
-  final String name;
+  final String? name;
   final String? description;
   @JsonKey(name: 'no_of_reviews')
-  final int numOfReviews;
+  final int? numOfReviews;
   final double? averageRating;
   final String? imageUrl;
 

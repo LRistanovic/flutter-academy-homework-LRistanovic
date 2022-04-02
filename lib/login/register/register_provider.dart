@@ -12,7 +12,6 @@ class RegisterProvider extends RequestProvider<User> {
   RegisterProvider({required this.context});
 
   void didClickRegisterButton() {
-    print('clicked register button');
     String email = context.read<CredentialsProvider>().email;
     String password = context.read<CredentialsProvider>().password;
     NetworkRepository repository = context.read<NetworkRepository>();

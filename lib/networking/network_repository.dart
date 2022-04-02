@@ -6,6 +6,7 @@ import 'package:tv_shows/networking/auth_info_holder.dart';
 import 'package:tv_shows/networking/interceptors/auth_info_interceptor.dart';
 import 'package:tv_shows/networking/interceptors/error_extractor_interceptor.dart';
 import 'package:tv_shows/networking/models/user.dart';
+import 'package:tv_shows/shows/util/review.dart';
 import 'package:tv_shows/shows/util/show.dart';
 
 class NetworkRepository {
@@ -29,14 +30,25 @@ class NetworkRepository {
     return User.fromJson(response.data['user']);
   }
 
-  Future<List<Show>?> fetchShows() async {
+  Future<List<Show>> fetchShows() async {
     final response = await dio.get('/shows');
-    List<Show>? shows = [];
-    for (var showJson in response.data['show']) {
-      if (showJson['name'] != null && showJson['id'] != null && showJson['numOfReviews'] != null) {
-        shows.add(Show.fromJson(showJson));
-      }
+    List<Show> shows = [];
+    for (var showJson in response.data['shows']) {
+      shows.add(Show.fromJson(showJson));
     }
     return shows;
+  }
+
+  Future<List<Review>> fetchReviews(String showId) async {
+    final response = await dio.get('/shows/$showId/reviews');
+    List<Review> reviews = [];
+    for (var reviewJson in response.data['reviews']) {
+      reviews.add(Review.fromJson(reviewJson));
+    }
+
+    for (var review in reviews) {
+      print(review.comment);
+    }
+    return reviews;
   }
 }
