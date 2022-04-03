@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
-import '../state_provider.dart';
+import 'package:tv_shows/login/credentials_provider.dart';
 
 class LoginCredentials extends StatelessWidget {
   final String title;
@@ -45,8 +44,7 @@ class LoginCredentials extends StatelessWidget {
                 autocorrect: false,
                 style: const TextStyle(color: Colors.white),
                 onChanged: (String val) {
-                  StateProvider provider = Provider.of<StateProvider>(context, listen: false);
-                  provider.email = val;
+                  context.read<CredentialsProvider>().email = val;
                 },
                 decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -60,7 +58,7 @@ class LoginCredentials extends StatelessWidget {
                     hoverColor: Colors.white),
               )),
           Container(
-            child: Consumer<StateProvider>(
+            child: Consumer<CredentialsProvider>(
               builder: (context, provider, _) => TextField(
                 obscureText: !provider.isVisible,
                 autocorrect: false,

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tv_shows/networking/network_repository.dart';
+import 'package:tv_shows/networking/request_provider/request_provider.dart';
 
 import 'show.dart';
 
-class ShowsProvider with ChangeNotifier {
-  final List<Show> shows = Show.allShows;
-  bool _areShowsAvailable = true;
+class ShowsProvider extends RequestProvider {
+  List<Show> shows = [];
 
-  bool get areShowsAvailable => _areShowsAvailable;
-  set areShowsAvailable(bool newVal) {
-    _areShowsAvailable = newVal;
-    notifyListeners();
+  ShowsProvider(BuildContext context) {
+    updateShows(context);
+  }
+
+  void updateShows(BuildContext context) {
+    executeRequest(requestBuilder: context.read<NetworkRepository>().fetchShows);
   }
 }

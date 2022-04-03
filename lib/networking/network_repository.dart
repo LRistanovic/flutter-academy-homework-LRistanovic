@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:tv_shows/networking/request_provider/request_provider.dart';
-
-import 'auth_info_holder.dart';
-import 'interceptors.dart';
-
-part 'network_repository.g.dart';
+import 'package:tv_shows/login/login/signin_info.dart';
+import 'package:tv_shows/login/register/register_info.dart';
+import 'package:tv_shows/networking/auth_info.dart';
+import 'package:tv_shows/networking/auth_info_holder.dart';
+import 'package:tv_shows/networking/interceptors/auth_info_interceptor.dart';
+import 'package:tv_shows/networking/interceptors/error_extractor_interceptor.dart';
+import 'package:tv_shows/networking/models/user.dart';
+import 'package:tv_shows/shows/util/review.dart';
+import 'package:tv_shows/shows/util/show.dart';
 
 class NetworkRepository {
   AuthInfoHolder authInfoHolder;
@@ -16,48 +18,37 @@ class NetworkRepository {
     dio.options.baseUrl = 'https://tv-shows.infinum.academy';
   }
 
-  Future<User> registerUser({required AuthInfoHolder authInfoHolder}) async {
-    final response = await dio.post('/users');
-    final authInfo = AuthInfo.fromHeaderMap(response.headers.map);
-    authInfoHolder.info = authInfo;
-    print(response.data);
+  Future<User> registerUser({required RegisterInfo registerInfo}) async {
+    final response = await dio.post('/users', data: registerInfo.toJson());
+    authInfoHolder.info = AuthInfo.fromHeaderMap(response.headers.map);
     return User.fromJson(response.data['user']);
   }
-}
 
-@JsonSerializable(createFactory: false)
-class RegisterInfo {
-  String? email;
-  String? password;
-  String? passwordConfirmation;
-
-  Map<String, dynamic> toJson() => _$RegisterInfoToJson(this);
-}
-
-class RegisterProvider extends RequestProvider<User> {
-  final NetworkRepository _repository;
-  RegisterProvider(this._repository);
-
-  void attemptRegister({required AuthInfoHolder authInfoHolder}) {
-    executeRequest(requestBuilder: () => _repository.registerUser(authInfoHolder: authInfoHolder));
+  Future<User> signinUser({required SigninInfo signinInfo}) async {
+    final response = await dio.post('/users/sign_in', data: signinInfo.toJson());
+    authInfoHolder.info = AuthInfo.fromHeaderMap(response.headers.map);
+    return User.fromJson(response.data['user']);
   }
-}
 
-class LoginInfo {}
+  Future<List<Show>> fetchShows() async {
+    final response = await dio.get('/shows');
+    List<Show> shows = [];
+    for (var showJson in response.data['shows']) {
+      shows.add(Show.fromJson(showJson));
+    }
+    return shows;
+  }
 
-class LoginProvider extends RequestProvider<User> {
-  final NetworkRepository _repository;
-  LoginProvider(this._repository);
-}
+  Future<List<Review>> fetchReviews(String showId) async {
+    final response = await dio.get('/shows/$showId/reviews');
+    List<Review> reviews = [];
+    for (var reviewJson in response.data['reviews']) {
+      reviews.add(Review.fromJson(reviewJson));
+    }
 
-@JsonSerializable(createToJson: false)
-class User {
-  String? id;
-  String? email;
-  @JsonKey(name: 'image_url')
-  String? imageUrl;
-
-  User();
-
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+    for (var review in reviews) {
+      print(review.comment);
+    }
+    return reviews;
+  }
 }

@@ -1,10 +1,15 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'network_repository.dart';
+part of 'register_info.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
+
+RegisterInfo _$RegisterInfoFromJson(Map<String, dynamic> json) => RegisterInfo(
+      email: json['email'] as String?,
+      password: json['password'] as String?,
+    )..passwordConfirmation = json['passwordConfirmation'] as String?;
 
 Map<String, dynamic> _$RegisterInfoToJson(RegisterInfo instance) =>
     <String, dynamic>{
@@ -12,8 +17,3 @@ Map<String, dynamic> _$RegisterInfoToJson(RegisterInfo instance) =>
       'password': instance.password,
       'passwordConfirmation': instance.passwordConfirmation,
     };
-
-User _$UserFromJson(Map<String, dynamic> json) => User()
-  ..id = json['id'] as String?
-  ..email = json['email'] as String?
-  ..imageUrl = json['image_url'] as String?;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'util/review.dart';
 import 'util/reviews_provider.dart';
 import 'util/show.dart';
 import 'widgets/review_widget.dart';
@@ -10,16 +11,24 @@ class ShowDetailsScreen extends StatelessWidget {
 
   const ShowDetailsScreen({Key? key, required this.show}) : super(key: key);
 
+  List<Widget> widgetsFromReviews(List<Review> reviews) {
+    List<Widget> widgets = [];
+    for (var review in reviews) {
+      widgets.add(ReviewWidget(review: review));
+    }
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(show.name),
+          title: Text(show.name ?? '<no data>'),
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
         ),
         body: ChangeNotifierProvider(
-          create: (context) => ReviewsProvider(),
+          create: (context) => ReviewsProvider(show.id, context),
           child: Container(
             padding: const EdgeInsets.only(left: 15, right: 15),
             child: Column(
@@ -30,12 +39,12 @@ class ShowDetailsScreen extends StatelessWidget {
                       children: [
                         Container(
                           margin: const EdgeInsets.only(top: 15),
-                          child: Image.asset(show.imageUrl),
+                          child: show.imageUrl != null ? Image.network(show.imageUrl!) : Container(),
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 25, bottom: 15),
                           child: Text(
-                            show.description,
+                            show.description ?? '',
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
@@ -49,13 +58,18 @@ class ShowDetailsScreen extends StatelessWidget {
                         ),
                         Consumer<ReviewsProvider>(
                           builder: (context, reviewsProvider, _) {
-                            return false // ovdje ide neki check ali nisam siguran koji, neka ga ovako za sad
-                                ? const NoReviewsWidget()
-                                : Column(
-                                    children:
-                                        reviewsProvider.reviews.map((review) => ReviewWidget(review: review)).toList());
+                            return reviewsProvider.state.when(
+                              initial: () => Container(),
+                              loading: () => const CircularProgressIndicator(),
+                              success: (reviews) => reviews.length != 0
+                                  ? Column(
+                                      children: widgetsFromReviews(reviews),
+                                    )
+                                  : const NoReviewsWidget(),
+                              failure: (error) => Text(error.toString()),
+                            );
                           },
-                        )
+                        ),
                       ],
                     ),
                   ),

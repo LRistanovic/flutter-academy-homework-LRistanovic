@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../state_provider.dart';
+import 'package:tv_shows/login/credentials_provider.dart';
 
 class LoginButton extends StatelessWidget {
-  final String buttonTitle;
+  final Widget buttonContent;
   final void Function() buttonPressed;
 
-  const LoginButton({Key? key, required this.buttonTitle, required this.buttonPressed}) : super(key: key);
+  const LoginButton({Key? key, required this.buttonContent, required this.buttonPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +15,10 @@ class LoginButton extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         height: 50,
-        child: Consumer<StateProvider>(
+        child: Consumer<CredentialsProvider>(
           builder: (context, provider, _) => ElevatedButton(
             onPressed: buttonPressed,
-            child: Text(buttonTitle),
+            child: buttonContent,
             style: ButtonStyle(
               shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(

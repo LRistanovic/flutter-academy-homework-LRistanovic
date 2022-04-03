@@ -14,12 +14,12 @@ class ReviewWidget extends StatelessWidget {
       children: [
         Row(
           children: [
-            SvgPicture.asset(review.imageUrl),
+            review.user.imageUrl != null ? SvgPicture.asset(review.user.imageUrl!) : Container(),
             Expanded(
               child: Container(
                 margin: const EdgeInsets.only(left: 10, right: 10),
                 child: Text(
-                  review.userEmail,
+                  review.user.email,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Color(0xff52368C),
@@ -46,10 +46,13 @@ class ReviewWidget extends StatelessWidget {
           ],
         ),
         Container(
-          margin: review.comment != null ? const EdgeInsets.only(top: 20, bottom: 20) : null,
+          margin: review.comment != null ? const EdgeInsets.only(top: 20, bottom: 10) : null,
           alignment: Alignment.centerLeft,
           child: Text(review.comment ?? ''),
         ),
+        const Divider(
+          thickness: 2,
+        )
       ],
     );
   }

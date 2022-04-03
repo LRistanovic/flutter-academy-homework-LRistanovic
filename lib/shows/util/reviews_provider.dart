@@ -1,7 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:tv_shows/networking/network_repository.dart';
+import 'package:tv_shows/networking/request_provider/request_provider.dart';
 
-import 'review.dart';
+class ReviewsProvider extends RequestProvider {
+  // List<Review>? reviews;
+  String showId;
 
-class ReviewsProvider with ChangeNotifier {
-  List<Review> reviews = Review.allReviews;
+  ReviewsProvider(this.showId, BuildContext context) {
+    updateReviews(showId, context);
+  }
+
+  void updateReviews(String showId, BuildContext context) {
+    executeRequest(
+      requestBuilder: () {
+        return context.read<NetworkRepository>().fetchReviews(showId);
+      },
+    );
+  }
 }
