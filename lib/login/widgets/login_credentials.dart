@@ -38,25 +38,27 @@ class LoginCredentials extends StatelessWidget {
             ),
           ),
           Container(
-              margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-              child: TextField(
-                obscureText: false,
-                autocorrect: false,
-                style: const TextStyle(color: Colors.white),
-                onChanged: (String val) {
-                  context.read<CredentialsProvider>().email = val;
-                },
-                decoration: const InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2),
-                    ),
-                    labelText: 'Email',
-                    labelStyle: TextStyle(color: Colors.white),
-                    hoverColor: Colors.white),
-              )),
+            margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: TextField(
+              obscureText: false,
+              autocorrect: false,
+              style: const TextStyle(color: Colors.white),
+              onChanged: (String val) {
+                context.read<CredentialsProvider>().email = val;
+              },
+              decoration: const InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2),
+                ),
+                labelText: 'Email',
+                labelStyle: TextStyle(color: Colors.white),
+                hoverColor: Colors.white,
+              ),
+            ),
+          ),
           Container(
             child: Consumer<CredentialsProvider>(
               builder: (context, provider, _) => TextField(

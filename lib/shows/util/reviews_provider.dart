@@ -4,7 +4,6 @@ import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/networking/request_provider/request_provider.dart';
 
 class ReviewsProvider extends RequestProvider {
-  // List<Review>? reviews;
   String showId;
 
   ReviewsProvider(this.showId, BuildContext context) {

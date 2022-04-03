@@ -20,39 +20,38 @@ class ShowsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Shows',
+          style: TextStyle(fontSize: 30),
+        ),
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.white,
+      ),
       body: ChangeNotifierProvider<ShowsProvider>(
         create: (context) => ShowsProvider(context),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              alignment: Alignment.centerLeft,
-              child: const Text(
-                'Shows',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Consumer<ShowsProvider>(
-              builder: (context, showsProvider, _) {
-                return showsProvider.state.when(
-                    initial: () => Container(),
-                    loading: () => const Padding(
-                          padding: EdgeInsets.all(20),
-                          child: CircularProgressIndicator(),
-                        ),
-                    success: (shows) => shows.length != 0
-                        ? Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: widgetsFromShows(shows),
-                              ),
-                            ),
-                          )
-                        : const NoShowsWidget(),
-                    failure: (error) => const NoShowsWidget());
-              },
-            ),
-          ],
+        child: Consumer<ShowsProvider>(
+          builder: (context, showsProvider, _) {
+            return showsProvider.state.when(
+                initial: () => Container(),
+                loading: () => const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                success: (shows) => shows.length != 0
+                    ? ListView(
+                        children: widgetsFromShows(shows),
+                      )
+                    // SingleChildScrollView(
+                    //   child: Column(
+                    //     children: widgetsFromShows(shows),
+                    //   ),
+                    // ),
+                    : const NoShowsWidget(),
+                failure: (error) => const NoShowsWidget());
+          },
         ),
       ),
     );

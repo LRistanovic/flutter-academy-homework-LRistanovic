@@ -6,6 +6,7 @@ import 'package:tv_shows/networking/auth_info_holder.dart';
 import 'package:tv_shows/networking/interceptors/auth_info_interceptor.dart';
 import 'package:tv_shows/networking/interceptors/error_extractor_interceptor.dart';
 import 'package:tv_shows/networking/models/user.dart';
+import 'package:tv_shows/shows/util/new_review_info.dart';
 import 'package:tv_shows/shows/util/review.dart';
 import 'package:tv_shows/shows/util/show.dart';
 
@@ -45,10 +46,11 @@ class NetworkRepository {
     for (var reviewJson in response.data['reviews']) {
       reviews.add(Review.fromJson(reviewJson));
     }
-
-    for (var review in reviews) {
-      print(review.comment);
-    }
     return reviews;
+  }
+
+  Future<Review> postReview({required NewReviewInfo reviewInfo}) async {
+    final response = await dio.post('/reviews', data: reviewInfo.toJson());
+    return Review.fromJson(response.data['review']);
   }
 }
