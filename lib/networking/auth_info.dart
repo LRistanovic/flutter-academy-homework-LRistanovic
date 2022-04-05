@@ -1,3 +1,5 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 class AuthInfo {
   AuthInfo({required this.accessToken, required this.client, required this.tokenType, required this.uid});
 
@@ -5,6 +7,8 @@ class AuthInfo {
   final String client;
   final String tokenType;
   final String uid;
+
+  final storage = const FlutterSecureStorage();
 
   factory AuthInfo.fromHeaderMap(Map<String, List<String>> headerMap) {
     return AuthInfo(

@@ -34,7 +34,8 @@ class LoginScreen extends StatelessWidget {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Error'),
-                            content: const Text('An error has occurred.'),
+                            content: Text(
+                                loginProvider.state.maybeWhen(failure: (error) => error.toString(), orElse: () => '')),
                             actions: [
                               TextButton(
                                 child: const Text('OK'),

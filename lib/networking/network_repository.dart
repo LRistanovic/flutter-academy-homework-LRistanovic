@@ -1,34 +1,57 @@
 import 'package:dio/dio.dart';
 import 'package:tv_shows/login/login/signin_info.dart';
 import 'package:tv_shows/login/register/register_info.dart';
-import 'package:tv_shows/networking/auth_info.dart';
-import 'package:tv_shows/networking/auth_info_holder.dart';
 import 'package:tv_shows/networking/interceptors/auth_info_interceptor.dart';
 import 'package:tv_shows/networking/interceptors/error_extractor_interceptor.dart';
 import 'package:tv_shows/networking/models/user.dart';
+import 'package:tv_shows/networking/storage_repository.dart';
 import 'package:tv_shows/shows/util/new_review_info.dart';
 import 'package:tv_shows/shows/util/review.dart';
 import 'package:tv_shows/shows/util/show.dart';
 
 class NetworkRepository {
-  AuthInfoHolder authInfoHolder;
+  StorageRepository storageRepository;
   Dio dio = Dio();
 
-  NetworkRepository({required this.authInfoHolder}) {
-    dio.interceptors.addAll([AuthInfoInterceptor(authInfoHolder), ErrorExtractorInterceptor()]);
+  NetworkRepository({required this.storageRepository}) {
+    dio.interceptors.addAll([AuthInfoInterceptor(storageRepository), ErrorExtractorInterceptor()]);
     dio.options.baseUrl = 'https://tv-shows.infinum.academy';
   }
 
   Future<User> registerUser({required RegisterInfo registerInfo}) async {
     final response = await dio.post('/users', data: registerInfo.toJson());
-    authInfoHolder.info = AuthInfo.fromHeaderMap(response.headers.map);
-    return User.fromJson(response.data['user']);
+    storageRepository.setInfo = response.headers.map;
+    final user = User.fromJson(response.data['user']);
+    storageRepository.storeUser(user);
+    return user;
   }
 
   Future<User> signinUser({required SigninInfo signinInfo}) async {
     final response = await dio.post('/users/sign_in', data: signinInfo.toJson());
-    authInfoHolder.info = AuthInfo.fromHeaderMap(response.headers.map);
-    return User.fromJson(response.data['user']);
+    storageRepository.setInfo = response.headers.map;
+    final user = User.fromJson(response.data['user']);
+    await storageRepository.storeUser(user);
+    return user;
+  }
+
+  Future<User> updateEmail({required String email}) async {
+    final response = await dio.put('/users', data: {'email': email});
+    final user = User.fromJson(response.data['user']);
+    storageRepository.storeUser(user);
+    return user;
+  }
+
+  Future<User> updateEmailAndImage({required String imagePath, required String email}) async {
+    final response = await dio.put(
+      '/users',
+      data: FormData.fromMap({
+        'file': MultipartFile.fromFile(imagePath),
+        'email': email,
+      }),
+    );
+    final user = User.fromJson(response.data['user']);
+    storageRepository.storeUser(user);
+    return user;
   }
 
   Future<List<Show>> fetchShows() async {
