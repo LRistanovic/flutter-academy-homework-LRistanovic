@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../show_details_screen.dart';
+import '../show_details_screen_slivers.dart';
 import '../util/show.dart';
 
 class ShowWidget extends StatelessWidget {
