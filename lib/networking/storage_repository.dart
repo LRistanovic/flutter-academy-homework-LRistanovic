@@ -1,5 +1,4 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tv_shows/networking/auth_info.dart';
 import 'package:tv_shows/networking/models/user.dart';
@@ -9,28 +8,24 @@ class StorageRepository {
   final storage = const FlutterSecureStorage();
   User? user;
 
-  StorageRepository() {
-    Hive.initFlutter();
-  }
-
   Future<void> storeUserInfo(User _user, Map<String, List<String>> headerMap) async {
     final userBox = await Hive.openLazyBox('user');
     await userBox.put('user', _user.toJson());
     user = _user;
-    setInfo(headerMap);
+    setInfo(AuthInfo.fromHeaderMap(headerMap));
   }
 
   // zovu se getInfo i setInfo jer me nije pustilo
   // da se zovu isto a da imaju razlicite return type/argument type
   AuthInfo? get getInfo => _info;
 
-  void setInfo(Map<String, List<String>> headerMap) {
-    storage.write(key: 'access-token', value: headerMap['access-token']!.first);
-    storage.write(key: 'client', value: headerMap['client']!.first);
-    storage.write(key: 'token-type', value: headerMap['token-type']!.first);
-    storage.write(key: 'uid', value: headerMap['uid']!.first);
+  void setInfo(AuthInfo authInfo) {
+    storage.write(key: 'access-token', value: authInfo.accessToken);
+    storage.write(key: 'client', value: authInfo.client);
+    storage.write(key: 'token-type', value: authInfo.tokenType);
+    storage.write(key: 'uid', value: authInfo.uid);
 
-    _info = AuthInfo.fromHeaderMap(headerMap);
+    _info = authInfo;
   }
 
   Future<void> checkStorage() async {
@@ -51,8 +46,9 @@ class StorageRepository {
 
     // User in Hive
     final userBox = await Hive.openLazyBox('user');
-    if (await userBox.get('user') != null) {
-      user = User.fromJson(Map<String, dynamic>.from(await userBox.get('user')));
+    final userObject = await userBox.get('user');
+    if (userObject != null) {
+      user = User.fromJson(Map<String, dynamic>.from(userObject));
     }
     userBox.close();
   }

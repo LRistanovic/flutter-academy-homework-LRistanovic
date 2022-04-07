@@ -43,7 +43,7 @@ class NetworkRepository {
     final response = await dio.put(
       '/users',
       data: FormData.fromMap({
-        'image': MultipartFile.fromFile(imagePath),
+        'image': MultipartFile.fromFile(imagePath, filename: imagePath),
       }),
     );
     final user = User.fromJson(response.data['user']);
