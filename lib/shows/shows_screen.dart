@@ -48,17 +48,19 @@ class ShowsScreen extends StatelessWidget {
                       builder: (context) => const UserProfileScreen(),
                     );
                   },
-                  child: context.read<NetworkRepository>().storageRepository.user?.imageUrl == null
-                      ? Image.asset(
-                          'assets/default-pfp.png',
-                          width: 50,
-                          height: 50,
-                        )
-                      : Image.network(
-                          context.read<NetworkRepository>().storageRepository.user!.imageUrl!,
-                          width: 50,
-                          height: 50,
-                        ),
+                  child: ClipOval(
+                    child: context.read<NetworkRepository>().storageRepository.user?.imageUrl == null
+                        ? Image.asset(
+                            'assets/default-pfp.png',
+                            width: 50,
+                            height: 50,
+                          )
+                        : Image.network(
+                            context.read<NetworkRepository>().storageRepository.user!.imageUrl!,
+                            width: 50,
+                            height: 50,
+                          ),
+                  ),
                 ),
               ],
             ),

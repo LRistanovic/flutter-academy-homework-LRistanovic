@@ -6,24 +6,26 @@ class UserProfileProvider extends RequestProvider {
   User user;
   NetworkRepository networkRepository;
 
-  String newEmail = '';
+  String? newEmail;
+
+  String? _newImagePath;
+  String? get newImagePath => _newImagePath;
+  set newImagePath(String? val) {
+    _newImagePath = val;
+    notifyListeners();
+  }
 
   UserProfileProvider(this.networkRepository) : user = networkRepository.storageRepository.user!;
 
-  void didSelectUpdateButton(String newEmail) {
-    if (networkRepository.storageRepository.user!.email == newEmail) {
-      return;
+  void didSelectUpdateButton() {
+    if (networkRepository.storageRepository.user!.email != newEmail && newEmail != null && newImagePath != null) {
+      executeRequest(
+        requestBuilder: () => networkRepository.updateEmailAndImage(email: newEmail!, imagePath: newImagePath!),
+      );
+    } else if (networkRepository.storageRepository.user!.email != newEmail && newEmail != null) {
+      executeRequest(requestBuilder: () => networkRepository.updateEmail(email: newEmail!));
+    } else if (newImagePath != null) {
+      executeRequest(requestBuilder: () => networkRepository.updateImage(imagePath: newImagePath!));
     }
-
-    executeRequest(requestBuilder: () => networkRepository.updateEmail(email: newEmail));
-  }
-
-  void didUpdateProfilePicture(String newImagePath, String newEmail) {
-    if (networkRepository.storageRepository.user!.email == newEmail) {
-      return;
-    }
-
-    executeRequest(
-        requestBuilder: () => networkRepository.updateEmailAndImage(email: newEmail, imagePath: newImagePath));
   }
 }

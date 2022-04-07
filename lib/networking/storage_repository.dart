@@ -13,17 +13,18 @@ class StorageRepository {
     Hive.initFlutter();
   }
 
-  Future<void> storeUser(User _user) async {
+  Future<void> storeUserInfo(User _user, Map<String, List<String>> headerMap) async {
     final userBox = await Hive.openLazyBox('user');
     await userBox.put('user', _user.toJson());
     user = _user;
+    setInfo(headerMap);
   }
 
   // zovu se getInfo i setInfo jer me nije pustilo
   // da se zovu isto a da imaju razlicite return type/argument type
   AuthInfo? get getInfo => _info;
 
-  set setInfo(Map<String, List<String>> headerMap) {
+  void setInfo(Map<String, List<String>> headerMap) {
     storage.write(key: 'access-token', value: headerMap['access-token']!.first);
     storage.write(key: 'client', value: headerMap['client']!.first);
     storage.write(key: 'token-type', value: headerMap['token-type']!.first);

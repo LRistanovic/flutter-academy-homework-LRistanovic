@@ -20,37 +20,47 @@ class NetworkRepository {
 
   Future<User> registerUser({required RegisterInfo registerInfo}) async {
     final response = await dio.post('/users', data: registerInfo.toJson());
-    storageRepository.setInfo = response.headers.map;
     final user = User.fromJson(response.data['user']);
-    storageRepository.storeUser(user);
+    storageRepository.storeUserInfo(user, response.headers.map);
     return user;
   }
 
   Future<User> signinUser({required SigninInfo signinInfo}) async {
     final response = await dio.post('/users/sign_in', data: signinInfo.toJson());
-    storageRepository.setInfo = response.headers.map;
     final user = User.fromJson(response.data['user']);
-    await storageRepository.storeUser(user);
+    await storageRepository.storeUserInfo(user, response.headers.map);
     return user;
   }
 
   Future<User> updateEmail({required String email}) async {
     final response = await dio.put('/users', data: {'email': email});
     final user = User.fromJson(response.data['user']);
-    storageRepository.storeUser(user);
+    await storageRepository.storeUserInfo(user, response.headers.map);
     return user;
   }
 
-  Future<User> updateEmailAndImage({required String imagePath, required String email}) async {
+  Future<User> updateImage({required String imagePath}) async {
     final response = await dio.put(
       '/users',
       data: FormData.fromMap({
-        'file': MultipartFile.fromFile(imagePath),
+        'image': MultipartFile.fromFile(imagePath),
+      }),
+    );
+    final user = User.fromJson(response.data['user']);
+    storageRepository.storeUserInfo(user, response.headers.map);
+    return user;
+  }
+
+  Future<User> updateEmailAndImage({required String email, required String imagePath}) async {
+    final response = await dio.put(
+      '/users',
+      data: FormData.fromMap({
+        'image': MultipartFile.fromFile(imagePath),
         'email': email,
       }),
     );
     final user = User.fromJson(response.data['user']);
-    storageRepository.storeUser(user);
+    storageRepository.storeUserInfo(user, response.headers.map);
     return user;
   }
 

@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:tv_shows/common/listener.dart';
 import 'package:tv_shows/login/login/login_screen.dart';
 import 'package:tv_shows/networking/network_repository.dart';
+import 'package:tv_shows/networking/request_provider/request_state.dart';
 import 'package:tv_shows/shows/util/user_profile_provider.dart';
 
 class UserProfileScreen extends StatelessWidget {
@@ -14,8 +18,7 @@ class UserProfileScreen extends StatelessWidget {
     if (imageFile == null) {
       return;
     }
-
-    userProfileProvider.didUpdateProfilePicture(imageFile.path, userProfileProvider.newEmail);
+    userProfileProvider.newImagePath = imageFile.path;
   }
 
   @override
@@ -36,17 +39,32 @@ class UserProfileScreen extends StatelessWidget {
               onPressed: () {
                 pickImage(context.read<UserProfileProvider>());
               },
-              child: context.read<UserProfileProvider>().user.imageUrl == null
-                  ? Image.asset(
-                      'assets/default-pfp.png',
+              child: ClipOval(
+                child: Consumer<UserProfileProvider>(
+                  builder: (context, userProfileProvider, _) {
+                    if (userProfileProvider.newImagePath != null) {
+                      return Image.file(
+                        File(userProfileProvider.newImagePath!),
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      );
+                    }
+                    if (userProfileProvider.user.imageUrl == null) {
+                      return Image.asset(
+                        'assets/default-pfp.png',
+                        width: 80,
+                        height: 80,
+                      );
+                    }
+                    return Image.network(
+                      userProfileProvider.user.imageUrl!,
                       width: 80,
                       height: 80,
-                    )
-                  : Image.network(
-                      context.read<UserProfileProvider>().user.imageUrl!,
-                      width: 80,
-                      height: 80,
-                    ),
+                    );
+                  },
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
@@ -73,10 +91,7 @@ class UserProfileScreen extends StatelessWidget {
               padding: const EdgeInsets.only(top: 30, bottom: 10),
               child: OutlinedButton(
                 onPressed: () {
-                  context
-                      .read<UserProfileProvider>()
-                      .didSelectUpdateButton(context.read<UserProfileProvider>().newEmail);
-                  Navigator.of(context).pop();
+                  context.read<UserProfileProvider>().didSelectUpdateButton();
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.white),
@@ -88,9 +103,20 @@ class UserProfileScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 50,
                   alignment: Alignment.center,
-                  child: const Text('Update'),
+                  child: context.watch<UserProfileProvider>().state.maybeWhen(
+                        loading: () => const CircularProgressIndicator(),
+                        orElse: () => const Text('Update'),
+                      ),
                 ),
               ),
+            ),
+            ProviderListener<UserProfileProvider>(
+              listener: (context, userProfileProvider) {
+                if (userProfileProvider.state is RequestStateSuccess) {
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Container(),
             ),
             ElevatedButton(
               onPressed: () {
