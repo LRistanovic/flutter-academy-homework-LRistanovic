@@ -29,10 +29,13 @@ class ShowWidget extends StatelessWidget {
             Expanded(
               flex: 3,
               child: show.imageUrl != null
-                  ? Image.network(
-                      show.imageUrl!,
-                      fit: BoxFit.fitWidth,
-                      width: double.infinity,
+                  ? Hero(
+                      tag: show.id,
+                      child: Image.network(
+                        show.imageUrl!,
+                        fit: BoxFit.fitWidth,
+                        width: double.infinity,
+                      ),
                     )
                   : Container(),
             ),

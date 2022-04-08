@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +6,7 @@ import 'package:tv_shows/login/login/login_screen.dart';
 import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/networking/request_provider/request_state.dart';
 import 'package:tv_shows/shows/util/user_profile_provider.dart';
+import 'package:tv_shows/shows/widgets/profile_picture_widget.dart';
 
 class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
@@ -30,42 +29,7 @@ class UserProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            OutlinedButton(
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all(
-                  const CircleBorder(),
-                ),
-              ),
-              onPressed: () {
-                pickImage(context.read<UserProfileProvider>());
-              },
-              child: ClipOval(
-                child: Consumer<UserProfileProvider>(
-                  builder: (context, userProfileProvider, _) {
-                    if (userProfileProvider.newImagePath != null) {
-                      return Image.file(
-                        File(userProfileProvider.newImagePath!),
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
-                      );
-                    }
-                    if (userProfileProvider.user.imageUrl == null) {
-                      return Image.asset(
-                        'assets/default-pfp.png',
-                        width: 80,
-                        height: 80,
-                      );
-                    }
-                    return Image.network(
-                      userProfileProvider.user.imageUrl!,
-                      width: 80,
-                      height: 80,
-                    );
-                  },
-                ),
-              ),
-            ),
+            ProfilePictureWidget(context.watch<UserProfileProvider>()),
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
               child: TextField(
@@ -111,8 +75,10 @@ class UserProfileScreen extends StatelessWidget {
               ),
             ),
             ProviderListener<UserProfileProvider>(
-              listener: (context, userProfileProvider) {
+              listener: (context, userProfileProvider) async {
                 if (userProfileProvider.state is RequestStateSuccess) {
+                  await userProfileProvider.pfpController?.forward();
+                  await userProfileProvider.pfpController?.reverse();
                   Navigator.of(context).pop();
                 }
               },

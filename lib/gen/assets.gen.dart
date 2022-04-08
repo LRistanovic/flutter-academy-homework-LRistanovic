@@ -35,6 +35,13 @@ class $AssetsImagesGen {
       const SvgGenImage('assets/images/welcomeicon.svg');
 }
 
+class $AssetsLottieGen {
+  const $AssetsLottieGen();
+
+  /// File path: assets/lottie/tv.json
+  String get tv => 'assets/lottie/tv.json';
+}
+
 class $AssetsImagesShowsGen {
   const $AssetsImagesShowsGen();
 
@@ -62,7 +69,11 @@ class $AssetsImagesShowsGen {
 class Assets {
   Assets._();
 
+  static const AssetGenImage defaultPfp =
+      AssetGenImage('assets/default-pfp.png');
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsLottieGen lottie = $AssetsLottieGen();
+  static const AssetGenImage splash = AssetGenImage('assets/splash.png');
 }
 
 class AssetGenImage extends AssetImage {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/shows/user_profile_screen.dart';
@@ -76,10 +77,10 @@ class ShowsScreen extends StatelessWidget {
                 builder: (context, showsProvider, _) {
                   return showsProvider.state.when(
                     initial: () => Container(),
-                    loading: () => const Padding(
-                      padding: EdgeInsets.all(20),
+                    loading: () => Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: Lottie.asset('assets/lottie/tv.json', height: 100),
                       ),
                     ),
                     success: (shows) => shows.length != 0

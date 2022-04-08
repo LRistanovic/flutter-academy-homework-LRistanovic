@@ -1,3 +1,4 @@
+import 'package:flutter/animation.dart';
 import 'package:tv_shows/networking/models/user.dart';
 import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/networking/request_provider/request_provider.dart';
@@ -14,6 +15,8 @@ class UserProfileProvider extends RequestProvider {
     _newImagePath = val;
     notifyListeners();
   }
+
+  AnimationController? pfpController;
 
   UserProfileProvider(this.networkRepository) : user = networkRepository.storageRepository.user!;
 

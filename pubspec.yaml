@@ -23,6 +23,7 @@ dependencies:
   hive:
   hive_flutter:
   image_picker: ^0.8.5
+  lottie: ^1.2.2
 
 dev_dependencies:
   flutter_test:
@@ -40,6 +41,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/lottie/
     - assets/images/
     - assets/images/shows/
 
