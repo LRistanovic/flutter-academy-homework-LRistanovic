@@ -12,7 +12,7 @@ class ShowsProvider extends RequestProvider {
     updateShows(context);
   }
 
-  void updateShows(BuildContext context) {
+  Future<void> updateShows(BuildContext context) async {
     executeRequest(requestBuilder: context.read<NetworkRepository>().fetchShows);
   }
 }

@@ -39,7 +39,7 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget> with Single
     if (imageFile == null) {
       return;
     }
-    userProfileProvider.newImagePath = imageFile.path;
+    userProfileProvider.newImage = imageFile;
   }
 
   @override
@@ -68,7 +68,7 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget> with Single
                 ),
                 child: widget.userProfileProvider.newImagePath != null
                     ? Image.file(
-                        File(widget.userProfileProvider.newImagePath!),
+                        File(widget.userProfileProvider.newImagePath!.path),
                         width: 80,
                         height: 80,
                         fit: BoxFit.cover,
@@ -85,6 +85,7 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget> with Single
                             widget.userProfileProvider.user.imageUrl!,
                             width: 80,
                             height: 80,
+                            fit: BoxFit.cover,
                             key: ValueKey(widget.userProfileProvider.user.imageUrl!),
                           ),
               );

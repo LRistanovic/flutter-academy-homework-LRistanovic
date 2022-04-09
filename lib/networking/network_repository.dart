@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tv_shows/login/login/signin_info.dart';
 import 'package:tv_shows/login/register/register_info.dart';
 import 'package:tv_shows/networking/interceptors/auth_info_interceptor.dart';
@@ -39,11 +40,11 @@ class NetworkRepository {
     return user;
   }
 
-  Future<User> updateImage({required String imagePath}) async {
+  Future<User> updateImage({required XFile image}) async {
     final response = await dio.put(
       '/users',
       data: FormData.fromMap({
-        'image': MultipartFile.fromFile(imagePath, filename: imagePath),
+        'image': await MultipartFile.fromFile(image.path),
       }),
     );
     final user = User.fromJson(response.data['user']);
@@ -51,11 +52,11 @@ class NetworkRepository {
     return user;
   }
 
-  Future<User> updateEmailAndImage({required String email, required String imagePath}) async {
+  Future<User> updateEmailAndImage({required String email, required XFile image}) async {
     final response = await dio.put(
       '/users',
       data: FormData.fromMap({
-        'image': MultipartFile.fromFile(imagePath),
+        'image': await MultipartFile.fromFile(image.path, filename: image.name),
         'email': email,
       }),
     );

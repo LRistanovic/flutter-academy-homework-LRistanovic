@@ -1,4 +1,5 @@
 import 'package:flutter/animation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tv_shows/networking/models/user.dart';
 import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/networking/request_provider/request_provider.dart';
@@ -9,10 +10,10 @@ class UserProfileProvider extends RequestProvider {
 
   String? newEmail;
 
-  String? _newImagePath;
-  String? get newImagePath => _newImagePath;
-  set newImagePath(String? val) {
-    _newImagePath = val;
+  XFile? _newImage;
+  XFile? get newImagePath => _newImage;
+  set newImage(XFile? val) {
+    _newImage = val;
     notifyListeners();
   }
 
@@ -21,14 +22,14 @@ class UserProfileProvider extends RequestProvider {
   UserProfileProvider(this.networkRepository) : user = networkRepository.storageRepository.user!;
 
   void didSelectUpdateButton() {
-    if (networkRepository.storageRepository.user!.email != newEmail && newEmail != null && newImagePath != null) {
+    if (networkRepository.storageRepository.user!.email != newEmail && newEmail != null && _newImage != null) {
       executeRequest(
-        requestBuilder: () => networkRepository.updateEmailAndImage(email: newEmail!, imagePath: newImagePath!),
+        requestBuilder: () => networkRepository.updateEmailAndImage(email: newEmail!, image: _newImage!),
       );
     } else if (networkRepository.storageRepository.user!.email != newEmail && newEmail != null) {
       executeRequest(requestBuilder: () => networkRepository.updateEmail(email: newEmail!));
     } else if (newImagePath != null) {
-      executeRequest(requestBuilder: () => networkRepository.updateImage(imagePath: newImagePath!));
+      executeRequest(requestBuilder: () => networkRepository.updateImage(image: _newImage!));
     }
   }
 }

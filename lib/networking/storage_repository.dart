@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tv_shows/networking/auth_info.dart';
 import 'package:tv_shows/networking/models/user.dart';
 
-class StorageRepository {
+class StorageRepository extends ChangeNotifier {
   AuthInfo? _info;
   final storage = const FlutterSecureStorage();
   User? user;
@@ -13,6 +14,7 @@ class StorageRepository {
     await userBox.put('user', _user.toJson());
     user = _user;
     setInfo(AuthInfo.fromHeaderMap(headerMap));
+    notifyListeners();
   }
 
   // zovu se getInfo i setInfo jer me nije pustilo

@@ -13,8 +13,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (context) => NetworkRepository(storageRepository: storageRepository),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => storageRepository),
+        Provider(create: (context) => NetworkRepository(storageRepository: storageRepository)),
+      ],
       child: MaterialApp(
         title: 'TV Shows',
         theme: ThemeData(
