@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/shows/user_profile_screen.dart';
 
+import '../networking/storage_repository.dart';
 import 'util/show.dart';
 import 'util/shows_provider.dart';
 import 'widgets/show_widget.dart';
@@ -48,18 +49,24 @@ class ShowsScreen extends StatelessWidget {
                       builder: (context) => const UserProfileScreen(),
                     );
                   },
-                  child: ClipOval(
-                    child: context.read<NetworkRepository>().storageRepository.user?.imageUrl == null
-                        ? Image.asset(
-                            'assets/default-pfp.png',
-                            width: 50,
-                            height: 50,
-                          )
-                        : Image.network(
-                            context.read<NetworkRepository>().storageRepository.user!.imageUrl!,
-                            width: 50,
-                            height: 50,
-                          ),
+                  child: Consumer<StorageRepository>(
+                    builder: (context, storageRepository, _) {
+                      return ClipOval(
+                        child: storageRepository.user?.imageUrl == null
+                            ? Image.asset(
+                                'assets/default-pfp.png',
+                                width: 50,
+                                height: 50,
+                              )
+                            : Image.network(
+                                storageRepository.user!.imageUrl!,
+                                width: 50,
+                                height: 50,
+                                key: const ValueKey('if i don\'t add this key the image wouldn\'t load on update'),
+                                fit: BoxFit.cover,
+                              ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -76,15 +83,18 @@ class ShowsScreen extends StatelessWidget {
                 builder: (context, showsProvider, _) {
                   return showsProvider.state.when(
                     initial: () => Container(),
-                    loading: () => const Padding(
-                      padding: EdgeInsets.all(20),
+                    loading: () => Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: Lottie.asset('assets/lottie/tv.json', height: 100),
                       ),
                     ),
                     success: (shows) => shows.length != 0
-                        ? ListView(
-                            children: widgetsFromShows(shows),
+                        ? RefreshIndicator(
+                            onRefresh: () => context.read<ShowsProvider>().updateShows(context),
+                            child: ListView(
+                              children: widgetsFromShows(shows),
+                            ),
                           )
                         : const NoShowsWidget(),
                     failure: (error) => const NoShowsWidget(),
