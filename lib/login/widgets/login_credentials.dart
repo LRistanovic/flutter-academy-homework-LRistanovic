@@ -40,6 +40,7 @@ class LoginCredentials extends StatelessWidget {
           Container(
             margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
             child: TextField(
+              key: const ValueKey('email field'),
               obscureText: false,
               autocorrect: false,
               style: const TextStyle(color: Colors.white),
@@ -62,6 +63,7 @@ class LoginCredentials extends StatelessWidget {
           Container(
             child: Consumer<CredentialsProvider>(
               builder: (context, provider, _) => TextField(
+                key: const ValueKey('password field'),
                 obscureText: !provider.isVisible,
                 autocorrect: false,
                 style: const TextStyle(color: Colors.white),

@@ -51,6 +51,7 @@ class _WriteReviewButtonWidgetState extends State<WriteReviewButtonWidget> with 
           onPressed: () {
             showModalBottomSheet(
               context: context,
+              isScrollControlled: true,
               builder: (context) => WriteReviewScreen(
                 showId: widget.show.id,
                 reviewsProvider: widget.reviewsProvider,

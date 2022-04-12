@@ -6,6 +6,7 @@ import 'package:tv_shows/login/credentials_provider.dart';
 import 'package:tv_shows/login/login/login_screen.dart';
 import 'package:tv_shows/login/register/register_provider.dart';
 import 'package:tv_shows/login/welcome_screen.dart';
+import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/networking/request_provider/request_state.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -16,7 +17,10 @@ class RegisterScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => CredentialsProvider(),
       child: ChangeNotifierProvider(
-        create: (context) => RegisterProvider(context: context),
+        create: (context) => RegisterProvider(
+          networkRepository: context.read<NetworkRepository>(),
+          credentialsProvider: context.read<CredentialsProvider>(),
+        ),
         child: Consumer<RegisterProvider>(
           builder: (context, registerProvider, _) {
             return ProviderListener<RegisterProvider>(
