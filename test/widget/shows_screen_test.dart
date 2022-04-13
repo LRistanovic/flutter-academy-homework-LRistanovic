@@ -77,6 +77,8 @@ void main() {
     when(networkRepository.storageRepository).thenReturn(storageRepository);
     when(storageRepository.user).thenReturn(User('id', 'email'));
 
+    tester.binding.window.physicalSizeTestValue = const Size(400, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(
       MultiProvider(
         providers: [

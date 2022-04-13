@@ -84,12 +84,14 @@ void main() {
           Review(
             id: '1',
             rating: 3,
-            showId: 0,
+            showId: 3,
             user: User('id', 'email'),
           )
         ],
       );
 
+      tester.binding.window.physicalSizeTestValue = const Size(400, 800);
+      tester.binding.window.devicePixelRatioTestValue = 1.0;
       await tester.pumpWidget(
         MaterialApp(
           home: Provider<NetworkRepository>(
@@ -99,19 +101,43 @@ void main() {
         ),
       );
 
+      await Future.delayed(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
-      final buttonFinder = find.byType(ElevatedButton);
+      final buttonFinder = find.byKey(const Key('write review button'));
 
       await tester.dragUntilVisible(buttonFinder, find.byType(CustomScrollView), const Offset(0, -50));
       await tester.pump();
-      await tester.ensureVisible(buttonFinder);
+      await Future.delayed(const Duration(milliseconds: 10));
       await tester.pumpAndSettle();
       await tester.tap(buttonFinder);
       await tester.pump();
-      // this looks like a mess because i have no idea how to fix the issue and hoped spamming some things would help
 
       expect(find.byType(WriteReviewScreen), findsOneWidget);
+    });
+  });
+
+  testWidgets('CustomScrollView built properly', (WidgetTester tester) async {
+    await tester.runAsync(() async {
+      final networkRepository = MockNetworkRepository();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Provider<NetworkRepository>(
+            create: (context) => networkRepository,
+            child: ShowDetailsScreen(show: Show('id', 'name', 'description', 0, 0, null)),
+          ),
+        ),
+      );
+
+      final appBarFinder = find.byType(SliverAppBar);
+      final descriptionFinder = find.byType(SliverToBoxAdapter).first;
+      final reviewsFinder = find.byType(SliverToBoxAdapter).last;
+      final writeReviewButtonFinder = find.byType(SliverFillRemaining);
+
+      expect(appBarFinder, findsOneWidget);
+      expect(descriptionFinder, findsOneWidget);
+      expect(reviewsFinder, findsOneWidget);
+      expect(writeReviewButtonFinder, findsOneWidget);
     });
   });
 }
