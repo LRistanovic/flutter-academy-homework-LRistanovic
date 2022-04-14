@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../shows/shows_screen.dart';
+import 'package:tv_shows/shows/shows_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   final String email;
@@ -18,22 +17,29 @@ class WelcomeScreen extends StatelessWidget {
     }
 
     Future.delayed(const Duration(seconds: 1), () {
-      final route = MaterialPageRoute(builder: (context) => ShowsScreen());
+      final route = MaterialPageRoute(builder: (context) => const ShowsScreen());
       Navigator.of(context).pushReplacement(route);
     });
 
     return MaterialApp(
-        home: Scaffold(
-            body: Container(
-                width: double.infinity,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                          margin: const EdgeInsets.all(20), child: SvgPicture.asset('assets/images/welcomeicon.svg')),
-                      Text('Welcome, $username!',
-                          style: const TextStyle(color: Colors.grey, fontSize: 20, fontWeight: FontWeight.bold))
-                    ]))));
+      home: Scaffold(
+        body: SizedBox(
+          width: double.infinity,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(margin: const EdgeInsets.all(20), child: SvgPicture.asset('assets/images/welcomeicon.svg')),
+                Text(
+                  'Welcome, $username!',
+                  style: const TextStyle(color: Colors.grey, fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                // Lottie.asset('assets/lottie/tv.json', height: 100),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

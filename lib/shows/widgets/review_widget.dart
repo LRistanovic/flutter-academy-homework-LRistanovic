@@ -23,8 +23,10 @@ class ReviewWidget extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: Colors.white,
                   image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: NetworkImage(review.user.imageUrl ?? defaultProfilePicture),
+                    fit: BoxFit.cover,
+                    image: review.user.imageUrl == null
+                        ? const AssetImage('assets/default-pfp.png') as ImageProvider
+                        : NetworkImage(review.user.imageUrl!),
                   ),
                 ),
               ),

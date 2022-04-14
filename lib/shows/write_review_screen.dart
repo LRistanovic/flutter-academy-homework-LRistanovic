@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_shows/common/listener.dart';
+import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/networking/request_provider/request_state.dart';
 import 'package:tv_shows/shows/util/reviews_provider.dart';
 import 'package:tv_shows/shows/util/write_review_provider.dart';
@@ -18,6 +19,7 @@ class WriteReviewScreen extends StatelessWidget {
       child: Consumer<WriteReviewProvider>(
         builder: (context, writeReviewProvider, _) {
           return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,7 +35,7 @@ class WriteReviewScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      icon: const Icon(Icons.arrow_downward))
+                      icon: const Icon(Icons.close))
                 ],
               ),
               Container(
@@ -89,7 +91,7 @@ class WriteReviewScreen extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    writeReviewProvider.submittedReview(context);
+                    writeReviewProvider.submittedReview(context.read<NetworkRepository>());
                   },
                 ),
               ),
@@ -100,7 +102,10 @@ class WriteReviewScreen extends StatelessWidget {
                   }
                 },
                 child: Container(),
-              )
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).viewInsets.bottom,
+              ),
             ],
           );
         },

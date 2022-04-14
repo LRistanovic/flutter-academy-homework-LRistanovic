@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/networking/request_provider/request_provider.dart';
 import 'package:tv_shows/shows/util/reviews_provider.dart';
@@ -14,15 +12,13 @@ class WriteReviewProvider extends RequestProvider {
 
   WriteReviewProvider({required this.showId, required this.reviewsProvider});
 
-  void submittedReview(BuildContext context) async {
+  Future<void> submittedReview(NetworkRepository networkRepository) async {
     await executeRequest(
       requestBuilder: () {
-        return context
-            .read<NetworkRepository>()
-            .postReview(reviewInfo: NewReviewInfo(int.parse(showId), rating, comment));
+        return networkRepository.postReview(reviewInfo: NewReviewInfo(int.parse(showId), rating, comment));
       },
     );
 
-    reviewsProvider.updateReviews(showId, context);
+    reviewsProvider.updateReviews(showId, networkRepository);
   }
 }
