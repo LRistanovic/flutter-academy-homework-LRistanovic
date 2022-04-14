@@ -4,6 +4,7 @@ import 'package:tv_shows/shows/widgets/description_widget.dart';
 import 'package:tv_shows/shows/widgets/reviews_section_widget.dart';
 import 'package:tv_shows/shows/widgets/write_review_button_widget.dart';
 
+import '../networking/network_repository.dart';
 import 'util/reviews_provider.dart';
 import 'util/show.dart';
 
@@ -16,7 +17,7 @@ class ShowDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChangeNotifierProvider(
-        create: (context) => ReviewsProvider(show.id, context),
+        create: (context) => ReviewsProvider(show.id, context.read<NetworkRepository>()),
         child: Consumer<ReviewsProvider>(
           builder: (context, reviewsProvider, _) {
             return CustomScrollView(
@@ -39,7 +40,7 @@ class ShowDetailsScreen extends StatelessWidget {
                               colorBlendMode: BlendMode.modulate,
                             ),
                           )
-                        : null,
+                        : Image.asset('assets/default-show-img.jpg'),
                   ),
                 ),
                 SliverToBoxAdapter(

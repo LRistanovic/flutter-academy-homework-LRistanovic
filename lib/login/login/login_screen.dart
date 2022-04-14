@@ -6,6 +6,7 @@ import 'package:tv_shows/login/credentials_provider.dart';
 import 'package:tv_shows/login/login/login_provider.dart';
 import 'package:tv_shows/login/register/register_screen.dart';
 import 'package:tv_shows/login/welcome_screen.dart';
+import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/networking/request_provider/request_state.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -18,7 +19,10 @@ class LoginScreen extends StatelessWidget {
       child: Consumer<CredentialsProvider>(
         builder: (context, credentialsProvider, _) {
           return ChangeNotifierProvider(
-            create: (context) => LoginProvider(context: context),
+            create: (context) => LoginProvider(
+              networkRepository: context.read<NetworkRepository>(),
+              credentialsProvider: context.read<CredentialsProvider>(),
+            ),
             child: Consumer<LoginProvider>(
               builder: (context, loginProvider, _) {
                 return ProviderListener<LoginProvider>(
@@ -35,7 +39,8 @@ class LoginScreen extends StatelessWidget {
                           return AlertDialog(
                             title: const Text('Error'),
                             content: Text(
-                                loginProvider.state.maybeWhen(failure: (error) => error.toString(), orElse: () => '')),
+                              loginProvider.state.maybeWhen(failure: (error) => error.toString(), orElse: () => ''),
+                            ),
                             actions: [
                               TextButton(
                                 child: const Text('OK'),

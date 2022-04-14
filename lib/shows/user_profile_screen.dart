@@ -46,6 +46,7 @@ class UserProfileScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 30, bottom: 10),
               child: OutlinedButton(
+                key: const ValueKey('update button'),
                 onPressed: () {
                   context.read<UserProfileProvider>().didSelectUpdateButton();
                 },
@@ -98,6 +99,7 @@ class UserProfileScreen extends StatelessWidget {
               child: Container(),
             ),
             ElevatedButton(
+              key: const Key('logout button'),
               onPressed: () {
                 context.read<StorageRepository>().deleteData();
 

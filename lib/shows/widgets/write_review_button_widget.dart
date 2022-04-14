@@ -48,9 +48,11 @@ class _WriteReviewButtonWidgetState extends State<WriteReviewButtonWidget> with 
         padding: const EdgeInsets.all(15),
         alignment: Alignment.bottomCenter,
         child: ElevatedButton(
+          key: const Key('write review button'),
           onPressed: () {
             showModalBottomSheet(
               context: context,
+              isScrollControlled: true,
               builder: (context) => WriteReviewScreen(
                 showId: widget.show.id,
                 reviewsProvider: widget.reviewsProvider,

@@ -37,7 +37,11 @@ class ShowWidget extends StatelessWidget {
                         width: double.infinity,
                       ),
                     )
-                  : Container(),
+                  : Image.asset(
+                      'assets/default-show-img.jpg',
+                      fit: BoxFit.fitWidth,
+                      width: double.infinity,
+                    ),
             ),
             Expanded(
               flex: 2,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:tv_shows/networking/network_repository.dart';
 import 'package:tv_shows/shows/user_profile_screen.dart';
 
 import '../networking/storage_repository.dart';
@@ -62,7 +63,7 @@ class ShowsScreen extends StatelessWidget {
                                 storageRepository.user!.imageUrl!,
                                 width: 50,
                                 height: 50,
-                                key: const ValueKey('if i don\'t add this key the image wouldn\'t load on update'),
+                                key: Key(storageRepository.user!.imageUrl!),
                                 fit: BoxFit.cover,
                               ),
                       );
@@ -78,7 +79,7 @@ class ShowsScreen extends StatelessWidget {
           ),
           Expanded(
             child: ChangeNotifierProvider<ShowsProvider>(
-              create: (context) => ShowsProvider(context),
+              create: (context) => ShowsProvider(context.read<NetworkRepository>()),
               child: Consumer<ShowsProvider>(
                 builder: (context, showsProvider, _) {
                   return showsProvider.state.when(
@@ -91,7 +92,8 @@ class ShowsScreen extends StatelessWidget {
                     ),
                     success: (shows) => shows.length != 0
                         ? RefreshIndicator(
-                            onRefresh: () => context.read<ShowsProvider>().updateShows(context),
+                            onRefresh: () =>
+                                context.read<ShowsProvider>().updateShows(context.read<NetworkRepository>()),
                             child: ListView(
                               children: widgetsFromShows(shows),
                             ),
